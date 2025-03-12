@@ -45,7 +45,7 @@ public class TransactionLogController : ControllerBase
             });
         }
 
-        [HttpGet("{accountId}")]
+        [HttpGet("transactionLog/{accountId}")]
         public async Task<IActionResult> GetTransactionLogsForAccount(long accountId)
         {
             var transactionLogs = await _context.TransactionLogs
@@ -78,5 +78,96 @@ public class TransactionLogController : ControllerBase
         public IQueryable<TransactionLog> GetTransactionLogs()
         {
             return _context.TransactionLogs;
+        }
+        
+        [HttpGet("GetCommonTransactions")]
+        public async Task<IActionResult> GetCommonTransactions([FromQuery] List<long> accountIds)
+        {
+            if (accountIds == null || accountIds.Count < 2)
+            {
+                return BadRequest("At least two account IDs must be provided.");
+            }
+
+            var transactions = await _context.TransactionLogs
+                .Where(t => accountIds.Contains(t.AccountId))
+                .ToListAsync();
+
+            var commonTransactions = transactions
+                .GroupBy(t => new { t.TransactionType, t.Amount })
+                .Where(g => g.Count() == accountIds.Count)
+                .Select(g => g.FirstOrDefault())
+                .ToList();
+
+            return Ok(commonTransactions);
+        }
+        
+        [HttpGet("GetAccountBalanceSummary")]
+        public async Task<IActionResult> GetAccountBalanceSummary([FromQuery] long customerId)
+        {
+            var accounts = await _context.Accounts
+                .Where(a => a.CustomerId == customerId)
+                .ToListAsync();
+
+            if (!accounts.Any())
+            {
+                return NotFound("No accounts found for the specified customer.");
+            }
+
+            var transactions = await _context.TransactionLogs
+                .Where(t => accounts.Select(a => a.Id).Contains(t.AccountId))
+                .ToListAsync();
+
+            var balanceSummary = accounts.Select(account => new
+            {
+                AccountId = account.Id,
+                AccountName = account.AccountName,
+                TotalDeposits = transactions
+                    .Where(t => t.AccountId == account.Id && t.TransactionType == "Deposit")
+                    .Sum(t => t.Amount),
+                TotalWithdrawals = transactions
+                    .Where(t => t.AccountId == account.Id && t.TransactionType == "Withdrawal")
+                    .Sum(t => t.Amount),
+                CurrentBalance = transactions
+                    .Where(t => t.AccountId == account.Id)
+                    .Sum(t => t.TransactionType == "Deposit" ? t.Amount : -t.Amount)
+            }).ToList();
+
+            return Ok(balanceSummary);
+        }
+        
+        [HttpPost]
+        [Route("createAccount")]
+        public async Task<IActionResult> CreateAccount([FromBody] Account account)
+        {
+            if (account == null || account.CustomerId == 0 || string.IsNullOrEmpty(account.AccountName))
+            {
+                return BadRequest("Account data is required.");
+            }
+
+            _context.Accounts.Add(account);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                return Ok(account); 
+            }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest($"Error while creating account: {ex.Message}");
+            }
+        }
+        
+        [HttpGet("account/{id}")]
+        public async Task<ActionResult<Account>> GetAccountById(long id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+
+            if (account == null)
+            {
+                return NotFound();
+            }
+
+            return account;
         }
     }

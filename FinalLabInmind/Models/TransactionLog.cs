@@ -23,4 +23,7 @@ public class TransactionLog
     public string Status { get; set; }
 
     public string Details { get; set; }
+    
+    public Account? Account { get; set; }
+
 }
