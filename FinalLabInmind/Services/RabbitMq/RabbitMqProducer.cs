@@ -4,7 +4,7 @@ using LoggingMicroservice.Models;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
-namespace FinalLabInmind.Services;
+namespace FinalLabInmind.Services.RabbitMq;
 
 public class RabbitMqProducer : IMessagePublisher
 {
@@ -40,5 +40,24 @@ public class RabbitMqProducer : IMessagePublisher
 
 
         await channel.BasicPublishAsync(exchange: "", routingKey: _queueName, body: body);
+    }
+
+    public async Task PublishLogAsync(string message)
+    {
+        var factory = new ConnectionFactory()
+        {
+            HostName = _host,
+            UserName = _username,
+            Password = _password
+        };
+
+        using var connection = await factory.CreateConnectionAsync("LoggingListener");
+        using var channel = await connection.CreateChannelAsync();
+
+        await channel.QueueDeclareAsync(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+        var body = Encoding.UTF8.GetBytes(message);
+        
+        await channel.BasicPublishAsync(exchange: "", routingKey: "logging_queue", body: body);
     }
 }

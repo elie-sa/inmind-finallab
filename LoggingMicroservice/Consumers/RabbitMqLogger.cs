@@ -4,19 +4,21 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using JsonElement = System.Text.Json.JsonElement;
 using System.Text.Json;
+using LoggingMicroservice.DbContext;
+using LoggingMicroservice.Models;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace LoggingMicroservice.Consumers;
 
-public class RabbitMqListenerService : BackgroundService
+public class RabbitMqLogger : BackgroundService
     {
         private readonly ConnectionFactory _factory;
         private IConnection _connection;
         private IChannel _channel;
-
+        
         private readonly IServiceProvider _serviceProvider;
 
-        public RabbitMqListenerService(IConfiguration configuration, IServiceProvider serviceProvider)
+        public RabbitMqLogger(IConfiguration configuration, IServiceProvider serviceProvider)
         {
             var rabbitMQConfig = configuration.GetSection("RabbitMQ");
             _factory = new ConnectionFactory
@@ -25,17 +27,16 @@ public class RabbitMqListenerService : BackgroundService
                 UserName = rabbitMQConfig["Username"],
                 Password = rabbitMQConfig["Password"]
             };
-
             _serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _connection = await _factory.CreateConnectionAsync("BankingServiceListener");
+            _connection = await _factory.CreateConnectionAsync("LoggingListener");
             _channel = await _connection.CreateChannelAsync();
 
             await _channel.QueueDeclareAsync(
-                queue: "transaction_logs",
+                queue: "logging_queue",
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
@@ -54,7 +55,7 @@ public class RabbitMqListenerService : BackgroundService
             };
 
             await _channel.BasicConsumeAsync(
-                queue: "transaction_logs",
+                queue: "logging_queue",
                 autoAck: false, 
                 consumer: consumer
             );
@@ -66,14 +67,25 @@ public class RabbitMqListenerService : BackgroundService
         {
             using (var scope = _serviceProvider.CreateScope())
             {
+                var context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+            
                 var messageObject = JsonSerializer.Deserialize<JsonElement>(message);
-                var accountId = messageObject.GetProperty("account_id").GetInt64();
-                var amount = messageObject.GetProperty("amount").GetDecimal();
-                var status = messageObject.GetProperty("status").GetString();
-                var details = messageObject.GetProperty("details").GetString();
+                var id = messageObject.GetProperty("request_id").GetGuid();
+                var requestObject = messageObject.GetProperty("request_object").GetRawText();
+                var routeUrl = messageObject.GetProperty("route_url").GetString();
+                var timeStamp = messageObject.GetProperty("timestamp").GetDateTime();
+            
+                Console.WriteLine($"request object: {requestObject}");
+                var log = new Log
+                {
+                    RequestId = id,
+                    RequestObject = JsonDocument.Parse(requestObject),
+                    RouteURL = routeUrl,
+                    Timestamp = timeStamp
+                };
 
-                Console.WriteLine($"{amount} for account {accountId}");
-                Console.WriteLine($"Status: {status}, Details: {details}");
+                context.Logs.Add(log);
+                await context.SaveChangesAsync();
             }
         }
     }

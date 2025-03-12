@@ -1,3 +1,4 @@
+using System.Text;
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using FinalLabInmind.Interfaces;
 using LoggingMicroservice.Models;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 [Route("api/transactions")]
 [ApiController]
@@ -24,7 +26,7 @@ public class TransactionLogController : ControllerBase
         {
             if (transactionLog == null)
             {
-                return BadRequest("Transaction data is missing.");
+                throw new ArgumentNullException(nameof(transactionLog));
             }
 
             transactionLog.Timestamp = DateTime.UtcNow;
@@ -32,7 +34,7 @@ public class TransactionLogController : ControllerBase
             _context.TransactionLogs.Add(transactionLog);
             await _context.SaveChangesAsync();
             
-            _messagePublisher.PublishTransactionAsync(transactionLog);
+            await _messagePublisher.PublishTransactionAsync(transactionLog);
 
             return Ok(new
             {
@@ -54,7 +56,7 @@ public class TransactionLogController : ControllerBase
 
             if (transactionLogs == null || !transactionLogs.Any())
             {
-                return NotFound("No transaction logs found for this account.");
+                throw new ArgumentNullException(nameof(transactionLogs));
             }
             
             foreach (var transactionLog in transactionLogs)
@@ -75,9 +77,16 @@ public class TransactionLogController : ControllerBase
 
         [HttpGet]
         [EnableQuery]
-        public IQueryable<TransactionLog> GetTransactionLogs()
+        public async Task<IQueryable<TransactionLog>> GetTransactionLogs()
         {
-            return _context.TransactionLogs;
+            var transactionLogs = _context.TransactionLogs;
+            foreach (var transactionLog in transactionLogs)
+            {
+
+                await _messagePublisher.PublishTransactionAsync(transactionLog);
+            }
+            
+            return transactionLogs;
         }
         
         [HttpGet("GetCommonTransactions")]
@@ -110,7 +119,7 @@ public class TransactionLogController : ControllerBase
 
             if (!accounts.Any())
             {
-                return NotFound("No accounts found for the specified customer.");
+                throw new ArgumentException("No accounts found for the specified customer.");
             }
 
             var transactions = await _context.TransactionLogs
@@ -141,7 +150,7 @@ public class TransactionLogController : ControllerBase
         {
             if (account == null || account.CustomerId == 0 || string.IsNullOrEmpty(account.AccountName))
             {
-                return BadRequest("Account data is required.");
+                throw new ArgumentNullException("Account data is required.");
             }
 
             _context.Accounts.Add(account);
@@ -165,9 +174,11 @@ public class TransactionLogController : ControllerBase
 
             if (account == null)
             {
-                return NotFound();
+                throw new ArgumentNullException(nameof(Account));
             }
 
             return account;
         }
+        
+        
     }

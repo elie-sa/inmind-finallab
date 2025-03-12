@@ -1,6 +1,10 @@
+using FinalLabInmind;
 using FinalLabInmind.DbContext;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
+using FinalLabInmind.Services.ExceptionServices;
+using FinalLabInmind.Services.RabbitMq;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqProducer>();
+builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+
+builder.Services.AddSingleton<RequestLoggingMiddleware>();
 
 builder.Services.AddControllers()
     .AddOData(options => options
@@ -32,10 +40,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(_ => { });
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.Run();
