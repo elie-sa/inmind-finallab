@@ -1,0 +1,23 @@
+{
+  "Version": 1,
+  "Hash": "oru7jvGAqJ+nQt1OauGP2goAUYZQ6LcL5lc6GZ9/o30=",
+  "Source": "FinalLabInmind",
+  "BasePath": "_content/FinalLabInmind",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\Esawm\\RiderProjects\\FinalLabInmind\\LoggingMicroservice\\LoggingMicroservice.csproj",
+      "Version": 2,
+      "Source": "LoggingMicroservice",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
