@@ -6,6 +6,7 @@ using JsonElement = System.Text.Json.JsonElement;
 using System.Text.Json;
 using LoggingMicroservice.DbContext;
 using LoggingMicroservice.Models;
+using LoggingMicroservice.Services;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace LoggingMicroservice.Consumers;
@@ -15,10 +16,12 @@ public class RabbitMqLogger : BackgroundService
         private readonly ConnectionFactory _factory;
         private IConnection _connection;
         private IChannel _channel;
+        private readonly LogQueue _logQueue;
+
         
         private readonly IServiceProvider _serviceProvider;
 
-        public RabbitMqLogger(IConfiguration configuration, IServiceProvider serviceProvider)
+        public RabbitMqLogger(IConfiguration configuration, IServiceProvider serviceProvider, LogQueue logQueue)
         {
             var rabbitMQConfig = configuration.GetSection("RabbitMQ");
             _factory = new ConnectionFactory
@@ -28,6 +31,7 @@ public class RabbitMqLogger : BackgroundService
                 Password = rabbitMQConfig["Password"]
             };
             _serviceProvider = serviceProvider;
+            _logQueue = logQueue;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -75,7 +79,6 @@ public class RabbitMqLogger : BackgroundService
                 var routeUrl = messageObject.GetProperty("route_url").GetString();
                 var timeStamp = messageObject.GetProperty("timestamp").GetDateTime();
             
-                Console.WriteLine($"request object: {requestObject}");
                 var log = new Log
                 {
                     RequestId = id,
@@ -84,8 +87,7 @@ public class RabbitMqLogger : BackgroundService
                     Timestamp = timeStamp
                 };
 
-                context.Logs.Add(log);
-                await context.SaveChangesAsync();
+                _logQueue.Enqueue(log);
             }
         }
     }

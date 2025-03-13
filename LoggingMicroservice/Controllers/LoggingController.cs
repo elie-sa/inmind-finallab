@@ -1,5 +1,6 @@
 using LoggingMicroservice.DbContext;
 using LoggingMicroservice.Models;
+using LoggingMicroservice.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ namespace LoggingMicroservice.Controllers;
 public class LoggingController:  ControllerBase
 {
     private readonly IAppDbContext _context;
-
-    public LoggingController(IAppDbContext context)
+    private readonly LogQueue _logQueue;
+    
+    public LoggingController(IAppDbContext context, LogQueue logQueue)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context), "AppDbContext is null!");
+        _context = context;
+        _logQueue = logQueue;
     }
     
     [HttpGet]
@@ -61,6 +64,18 @@ public class LoggingController:  ControllerBase
             log.Timestamp,
             log.RequestObject
         }));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> StoreLogs()
+    {
+        var logs = _logQueue.DequeueAll();
+        if (!logs.Any()) return BadRequest("No logs to store.");
+
+        await _context.Logs.AddRangeAsync(logs);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = $"{logs.Count} logs stored successfully." });
     }
     
 }
