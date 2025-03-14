@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FinalLabInmind.Controllers;
 
-[Route("api/transactionEvents")]
+[Route("api/accountEvents")]
 [ApiController]
 public class AccountEventsController: ControllerBase
 {

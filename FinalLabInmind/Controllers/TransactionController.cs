@@ -1,8 +1,10 @@
 using System.Text;
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
+using FinalLabInmind.DTO;
 using Microsoft.AspNetCore.Mvc;
 using FinalLabInmind.Interfaces;
+using FinalLabInmind.Services.TransactionService;
 using LoggingMicroservice.Models;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +16,13 @@ public class TransactionLogController : ControllerBase
     {
         private readonly IAppDbContext _context;
         private readonly IMessagePublisher _messagePublisher;
+        private readonly TransactionService _transactionService;
 
-        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher)
+        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, TransactionService transactionService)
         {
             _context = context;
             _messagePublisher = messagePublisher;
+            _transactionService = transactionService;
         }
 
         [HttpPost]
@@ -180,5 +184,17 @@ public class TransactionLogController : ControllerBase
             return account;
         }
         
+        [HttpPost("transfer")]
+        public async Task<IActionResult> TransferFunds([FromBody] TransferRequest request)
+        {
+            var result = await _transactionService.TransferFundsAsync(request.FromAccountId, request.ToAccountId, request.Amount);
+        
+            if (result.StartsWith("Transfer failed"))
+            {
+                return BadRequest(new { error = result });
+            }
+
+            return Ok(new { message = result });
+        }
         
     }

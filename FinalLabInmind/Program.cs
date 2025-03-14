@@ -5,6 +5,8 @@ using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
 using FinalLabInmind.Services.ExceptionServices;
 using FinalLabInmind.Services.RabbitMq;
+using FinalLabInmind.Services.TransactionService;
+using FinalLabInmind.Services.UnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.OData;
@@ -17,6 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqProducer>();
 builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<TransactionService>();
 
 builder.Services.AddSingleton<RequestLoggingMiddleware>();
 
