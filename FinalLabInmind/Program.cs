@@ -1,9 +1,11 @@
+using System.Reflection;
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
 using FinalLabInmind.Services.ExceptionServices;
 using FinalLabInmind.Services.RabbitMq;
+using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,8 @@ builder.Services.AddControllers()
         .Select().Filter().OrderBy().Expand().Count().SetMaxTop(100));
 
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -47,6 +51,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 
