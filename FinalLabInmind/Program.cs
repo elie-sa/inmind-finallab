@@ -31,14 +31,11 @@ builder.Services.AddControllers()
         .Select().Filter().OrderBy().Expand().Count().SetMaxTop(100));
 
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddLocalization(options => options.ResourcesPath = "");
 
-var supportedCultures = new[] { "en", "fr" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-localizationOptions.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
+builder.Services.AddControllers()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 

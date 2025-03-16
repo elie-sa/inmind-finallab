@@ -187,3 +187,12 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\en\F
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\en\FinalLabInmind.resources.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\fr\FinalLabInmind.resources.cs
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\fr\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.AccountDetails.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\de\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.AccountDetails.de.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\de\FinalLabInmind.resources.cs
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\de\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.TransactionDetails.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.TransactionDetail.en.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.TransactionDetails.de.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.TransactionDetails.fr.resources

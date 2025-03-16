@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
@@ -19,11 +20,14 @@ public class TransactionLogController : ControllerBase
         private readonly IAppDbContext _context;
         private readonly IMessagePublisher _messagePublisher;
         private readonly TransactionService _transactionService;
-        private readonly IStringLocalizer<AccountDetails> _localizer;
+        private readonly IStringLocalizer<AccountDetails> _accountLocalizer;
+        private readonly IStringLocalizer<TransactionDetails> _transactionLocalizer;
         
-        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, TransactionService transactionService)
+        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, TransactionService transactionService, IStringLocalizer<AccountDetails> accountLocalizer, IStringLocalizer<TransactionDetails> transactionLocalizer)
         {
             _context = context;
+            _accountLocalizer = accountLocalizer;
+            _transactionLocalizer = transactionLocalizer;
             _messagePublisher = messagePublisher;
             _transactionService = transactionService;
         }
@@ -200,6 +204,9 @@ public class TransactionLogController : ControllerBase
             return Ok(new { message = result });
         }
         
+        
+        [Route("accounts/{id}/details")]
+        [HttpGet]
         public async Task<ActionResult<string>> GetAccountDetailsById(long id)
         {
             var account = await _context.Accounts.FindAsync(id);
@@ -215,16 +222,77 @@ public class TransactionLogController : ControllerBase
                 });
             }
 
-            string resourceKey = account.AccountName;
+            var userLanguage = Request.Headers["Accept-Language"].ToString();
 
-            var localizedDetails = _localizer[resourceKey];
-
-            if (localizedDetails == null)
+            if (string.IsNullOrEmpty(userLanguage))
             {
-                localizedDetails = _localizer["Account_Default_Details"];
+                userLanguage = "en";
             }
 
-            return Ok(localizedDetails);
+            try
+            {
+                var culture = new CultureInfo(userLanguage);
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
+            catch (CultureNotFoundException)
+            {
+                return BadRequest("Invalid language code.");
+            }
+
+            string resourceKey = account.AccountName;
+            var localizedName = _accountLocalizer[resourceKey];
+
+            if (string.IsNullOrEmpty(localizedName))
+            {
+                localizedName = _accountLocalizer["Account_Default_Details"];
+            }
+
+            return Ok(localizedName);
+        }
+        
+        [Route("accounts/{id}/notification")]
+        [HttpPost]
+        public async Task<ActionResult<string>> PostTransactionNotification(long id)
+        {
+            var transaction = await _context.TransactionLogs.FindAsync(id);
+
+            if (transaction == null)
+            {
+                return NotFound(new
+                {
+                    name = "Transaction",
+                    value = "Not found",
+                    resourceNotFound = true,
+                    searchedLocation = $"Transaction with ID {id} not found"
+                });
+            }
+
+            var userLanguage = Request.Headers["Accept-Language"].ToString();
+
+            if (string.IsNullOrEmpty(userLanguage))
+            {
+                userLanguage = "en";
+            }
+
+            try
+            {
+                var culture = new CultureInfo(userLanguage);
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
+            catch (CultureNotFoundException)
+            {
+                return BadRequest("Invalid language code.");
+            }
+
+            string resourceKey = transaction.Details;
+            var localizedName = _transactionLocalizer[resourceKey];
+
+            if (string.IsNullOrEmpty(localizedName))
+            {
+                localizedName = _transactionLocalizer["Transaction_Default_Details"];
+            }
+
+            return Ok(localizedName);
         }
         
     }
