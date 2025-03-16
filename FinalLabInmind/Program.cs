@@ -22,7 +22,7 @@ builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddScoped<TransactionService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddSingleton<RequestLoggingMiddleware>();
 

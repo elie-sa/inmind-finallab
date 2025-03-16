@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinalLabInmind", "FinalLabI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingMicroservice", "LoggingMicroservice\LoggingMicroservice.csproj", "{65C9FDA2-0917-4AF1-B32E-3444B3646E3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinalLabInmind.Tests", "FinalLabInmind.Tests\FinalLabInmind.Tests.csproj", "{05001986-4F4E-43F5-BCA9-E3911868EC70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{65C9FDA2-0917-4AF1-B32E-3444B3646E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65C9FDA2-0917-4AF1-B32E-3444B3646E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65C9FDA2-0917-4AF1-B32E-3444B3646E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05001986-4F4E-43F5-BCA9-E3911868EC70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05001986-4F4E-43F5-BCA9-E3911868EC70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05001986-4F4E-43F5-BCA9-E3911868EC70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05001986-4F4E-43F5-BCA9-E3911868EC70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

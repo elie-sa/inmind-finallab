@@ -19,11 +19,11 @@ public class TransactionLogController : ControllerBase
     {
         private readonly IAppDbContext _context;
         private readonly IMessagePublisher _messagePublisher;
-        private readonly TransactionService _transactionService;
+        private readonly ITransactionService _transactionService;
         private readonly IStringLocalizer<AccountDetails> _accountLocalizer;
         private readonly IStringLocalizer<TransactionDetails> _transactionLocalizer;
         
-        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, TransactionService transactionService, IStringLocalizer<AccountDetails> accountLocalizer, IStringLocalizer<TransactionDetails> transactionLocalizer)
+        public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, ITransactionService transactionService, IStringLocalizer<AccountDetails> accountLocalizer, IStringLocalizer<TransactionDetails> transactionLocalizer)
         {
             _context = context;
             _accountLocalizer = accountLocalizer;
@@ -47,15 +47,7 @@ public class TransactionLogController : ControllerBase
             
             await _messagePublisher.PublishTransactionAsync(transactionLog);
 
-            return Ok(new
-            {
-                transactionLog.Id,
-                transactionLog.AccountId,
-                transactionLog.TransactionType,
-                transactionLog.Amount,
-                transactionLog.Status,
-                transactionLog.Timestamp
-            });
+            return Ok(transactionLog);
         }
 
         [HttpGet("transactionLog/{accountId}")]
@@ -76,19 +68,12 @@ public class TransactionLogController : ControllerBase
                 await _messagePublisher.PublishTransactionAsync(transactionLog);
             }
 
-            return Ok(transactionLogs.Select(t => new
-            {
-                t.Id,
-                t.TransactionType,
-                t.Amount,
-                t.Timestamp,
-                t.Status
-            }));
+            return Ok(transactionLogs);
         }
 
         [HttpGet]
         [EnableQuery]
-        public async Task<IQueryable<TransactionLog>> GetTransactionLogs()
+        public async Task<IActionResult> GetTransactionLogs()
         {
             var transactionLogs = _context.TransactionLogs;
             foreach (var transactionLog in transactionLogs)
@@ -97,7 +82,7 @@ public class TransactionLogController : ControllerBase
                 await _messagePublisher.PublishTransactionAsync(transactionLog);
             }
             
-            return transactionLogs;
+            return Ok(transactionLogs);
         }
         
         [HttpGet("GetCommonTransactions")]
@@ -137,7 +122,7 @@ public class TransactionLogController : ControllerBase
                 .Where(t => accounts.Select(a => a.Id).Contains(t.AccountId))
                 .ToListAsync();
 
-            var balanceSummary = accounts.Select(account => new
+            IEnumerable<AccountBalanceSummary> balanceSummary = accounts.Select(account => new AccountBalanceSummary
             {
                 AccountId = account.Id,
                 AccountName = account.AccountName,

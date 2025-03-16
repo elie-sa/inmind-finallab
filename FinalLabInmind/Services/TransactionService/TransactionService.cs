@@ -2,7 +2,7 @@ using LoggingMicroservice.Models;
 
 namespace FinalLabInmind.Services.TransactionService;
 
-public class TransactionService
+public class TransactionService: ITransactionService
 {
     private readonly IUnitOfWork _unitOfWork;
 
