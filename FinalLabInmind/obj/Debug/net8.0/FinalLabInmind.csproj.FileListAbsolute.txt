@@ -178,3 +178,12 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\Fina
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\MediatR.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\MediatR.Contracts.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\MediatR.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\en\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\fr\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.AccountDetails.en.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.Resources.AccountDetails.fr.resources
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.csproj.GenerateResource.cache
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\en\FinalLabInmind.resources.cs
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\en\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\fr\FinalLabInmind.resources.cs
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\fr\FinalLabInmind.resources.dll

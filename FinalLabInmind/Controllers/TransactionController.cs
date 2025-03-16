@@ -4,10 +4,12 @@ using FinalLabInmind.DbContext;
 using FinalLabInmind.DTO;
 using Microsoft.AspNetCore.Mvc;
 using FinalLabInmind.Interfaces;
+using FinalLabInmind.Resources;
 using FinalLabInmind.Services.TransactionService;
 using LoggingMicroservice.Models;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 
 [Route("api/transactions")]
@@ -17,7 +19,8 @@ public class TransactionLogController : ControllerBase
         private readonly IAppDbContext _context;
         private readonly IMessagePublisher _messagePublisher;
         private readonly TransactionService _transactionService;
-
+        private readonly IStringLocalizer<AccountDetails> _localizer;
+        
         public TransactionLogController(IAppDbContext context, IMessagePublisher messagePublisher, TransactionService transactionService)
         {
             _context = context;
@@ -195,6 +198,33 @@ public class TransactionLogController : ControllerBase
             }
 
             return Ok(new { message = result });
+        }
+        
+        public async Task<ActionResult<string>> GetAccountDetailsById(long id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+
+            if (account == null)
+            {
+                return NotFound(new
+                {
+                    name = "Account",
+                    value = "Not found",
+                    resourceNotFound = true,
+                    searchedLocation = $"Account with ID {id} not found"
+                });
+            }
+
+            string resourceKey = account.AccountName;
+
+            var localizedDetails = _localizer[resourceKey];
+
+            if (localizedDetails == null)
+            {
+                localizedDetails = _localizer["Account_Default_Details"];
+            }
+
+            return Ok(localizedDetails);
         }
         
     }

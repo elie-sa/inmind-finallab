@@ -23,6 +23,14 @@
         },
         "runtime": {
           "FinalLabInmind.dll": {}
+        },
+        "resources": {
+          "en/FinalLabInmind.resources.dll": {
+            "locale": "en"
+          },
+          "fr/FinalLabInmind.resources.dll": {
+            "locale": "fr"
+          }
         }
       },
       "Humanizer.Core/2.14.1": {
