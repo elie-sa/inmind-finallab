@@ -22,7 +22,7 @@ public class TransactionLogService : ITransactionLogService
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == transactionLogDto.AccountId);
             if (account == null)
             {
-                throw new Exception("Account not found.");
+                throw new ArgumentNullException("Account not found.");
             }
 
             decimal balanceChange = 0;
@@ -35,12 +35,12 @@ public class TransactionLogService : ITransactionLogService
                 balanceChange = -transactionLogDto.Amount;
                 if (account.Balance + balanceChange < 0)
                 {
-                    throw new Exception("Insufficient funds for withdrawal.");
+                    throw new ArgumentException("Insufficient funds for withdrawal.");
                 }
             }
             else
             {
-                throw new Exception("Invalid transaction type.");
+                throw new ArgumentException("Invalid transaction type.");
             }
 
             account.Balance += balanceChange;
@@ -72,7 +72,7 @@ public class TransactionLogService : ITransactionLogService
 
             if (!transactionLogs.Any())
             {
-                throw new Exception("No transaction logs found for this account.");
+                throw new ArgumentException("No transaction logs found for this account.");
             }
 
             return transactionLogs.Select(t => new TransactionLogDto(t)).ToList();
@@ -82,79 +82,5 @@ public class TransactionLogService : ITransactionLogService
         {
             return _context.TransactionLogs.Select(t => new TransactionLogDto(t));
         }
-
-        public async Task<List<TransactionLog>> GetCommonTransactionsAsync(List<long> accountIds)
-        {
-            if (accountIds == null || accountIds.Count < 2)
-            {
-                throw new Exception("At least two account IDs must be provided.");
-            }
-
-            var transactions = await _context.TransactionLogs
-                .Where(t => accountIds.Contains(t.AccountId))
-                .ToListAsync();
-
-            var commonTransactions = transactions
-                .GroupBy(t => new { t.TransactionType, t.Amount })
-                .Where(g => g.Count() == accountIds.Count)
-                .Select(g => g.First())
-                .ToList();
-
-            return commonTransactions;
-        }
-
-        public async Task<List<AccountBalanceSummaryDto>> GetAccountBalanceSummaryAsync(long customerId)
-        {
-            var accounts = await _context.Accounts
-                .Where(a => a.CustomerId == customerId)
-                .ToListAsync();
-
-            if (!accounts.Any())
-            {
-                throw new Exception("No accounts found for the specified customer.");
-            }
-
-            var transactions = await _context.TransactionLogs
-                .Where(t => accounts.Select(a => a.Id).Contains(t.AccountId))
-                .ToListAsync();
-
-            var balanceSummary = accounts.Select(account => new AccountBalanceSummaryDto
-            {
-                AccountId = account.Id,
-                AccountName = account.AccountName,
-                TotalDeposits = transactions
-                    .Where(t => t.AccountId == account.Id && t.TransactionType.Equals("Deposit", StringComparison.OrdinalIgnoreCase))
-                    .Sum(t => t.Amount),
-                TotalWithdrawals = transactions
-                    .Where(t => t.AccountId == account.Id && t.TransactionType.Equals("Withdrawal", StringComparison.OrdinalIgnoreCase))
-                    .Sum(t => t.Amount),
-                CurrentBalance = account.Balance
-            }).ToList();
-
-            return balanceSummary;
-        }
-
-        public async Task<Account> CreateAccountAsync(Account account)
-        {
-            if (account == null || account.CustomerId == 0 || string.IsNullOrEmpty(account.AccountName))
-            {
-                throw new Exception("Account data is required.");
-            }
-
-            account.Balance = 0;
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
-
-            return account;
-        }
-
-        public async Task<Account> GetAccountByIdAsync(long id)
-        {
-            var account = await _context.Accounts.FindAsync(id);
-            if (account == null)
-            {
-                throw new Exception("Account not found.");
-            }
-            return account;
-        }
+        
     }

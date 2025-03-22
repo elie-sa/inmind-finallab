@@ -1,6 +1,7 @@
 using FinalLabInmind.DbContext;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
+using FinalLabInmind.Services.AccountService;
 using FinalLabInmind.Services.TransactionLogService;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqProducer>();
 
+// my custom services
 builder.Services.AddScoped<ITransactionLogService, TransactionLogService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddControllers()
     .AddOData(options => options
