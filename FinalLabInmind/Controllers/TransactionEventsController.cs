@@ -1,36 +1,53 @@
 using FinalLabInmind.DbContext;
-using LoggingMicroservice.Models;
+using FinalLabInmind.DTOs;
+using FinalLabInmind.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinalLabInmind.Controllers;
 
-[Route("api/transactionEvents")]
 [ApiController]
+[Route("events")]
 public class TransactionEventsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IAppDbContext _context;
 
     public TransactionEventsController(IMediator mediator)
     {
         _mediator = mediator;
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> CreateEvent([FromBody] TransactionEvent request)
+    public async Task<IActionResult> PostEvent([FromBody] EventDto eventDto, [FromQuery] long transactionId)
     {
-        await _mediator.Publish(request);
-        return Ok(new { Message = "Event dispatched successfully" });
+        var transactionEvent = new TransactionEvent
+        {
+            TransactionId = transactionId,
+            EventType = eventDto.EventType,
+            Details = eventDto.Details,
+            Timestamp = eventDto.Timestamp
+        };
+
+        await _mediator.Publish(transactionEvent);
+
+        return Ok(new 
+        { 
+            Message = "Transaction event dispatched successfully.", 
+            EventId = transactionEvent.Id 
+        });
     }
-    
+
     [HttpGet("{transactionId}")]
-    public async Task<IActionResult> GetEvents(long transactionId, [FromServices] IAppDbContext context)
+    public async Task<IActionResult> GetEvents([FromServices] IAppDbContext context, [FromRoute] long transactionId)
     {
-        var events = await context.TransactionLogs
-            .Where(t => t.Id == transactionId)
+        var events = await context.TransactionEvents
+            .Where(e => e.TransactionId == transactionId)
+            .OrderByDescending(e => e.Timestamp)
             .ToListAsync();
+
+        if (!events.Any())
+            return NotFound("No events found for this transaction.");
 
         return Ok(events);
     }
