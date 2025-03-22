@@ -134,3 +134,4 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\LoggingMicroservice\obj\Debug\net8.0
 C:\Users\Esawm\RiderProjects\FinalLabInmind\LoggingMicroservice\obj\Debug\net8.0\LoggingMicroservice.pdb
 C:\Users\Esawm\RiderProjects\FinalLabInmind\LoggingMicroservice\obj\Debug\net8.0\LoggingMicroservice.genruntimeconfig.cache
 C:\Users\Esawm\RiderProjects\FinalLabInmind\LoggingMicroservice\obj\Debug\net8.0\ref\LoggingMicroservice.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\LoggingMicroservice\obj\Debug\net8.0\LoggingMicroservice.sourcelink.json
