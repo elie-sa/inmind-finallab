@@ -76,15 +76,25 @@ public class AccountService : IAccountService
                 throw new ArgumentException("At least two account IDs must be provided.");
             }
 
+            var uniqueAccountIds = accountIds.Distinct().ToList();
+
             var transactions = await _context.TransactionLogs
-                .Where(t => accountIds.Contains(t.AccountId))
+                .Where(t => uniqueAccountIds.Contains(t.AccountId))
                 .ToListAsync();
 
-            var commonTransactions = transactions
-                .GroupBy(t => new { t.TransactionType, t.Amount })
-                .Where(g => g.Count() == accountIds.Count)
+            var commonByType = transactions
+                .GroupBy(t => t.TransactionType)
+                .Where(g => g.Select(t => t.AccountId).Distinct().Count() == uniqueAccountIds.Count)
                 .Select(g => g.First())
                 .ToList();
+
+            var commonByAmount = transactions
+                .GroupBy(t => t.Amount)
+                .Where(g => g.Select(t => t.AccountId).Distinct().Count() == uniqueAccountIds.Count)
+                .Select(g => g.First())
+                .ToList();
+
+            var commonTransactions = commonByType.Union(commonByAmount).ToList();
 
             return commonTransactions;
         }

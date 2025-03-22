@@ -67,13 +67,14 @@ public class RabbitMqListenerService : BackgroundService
             using (var scope = _serviceProvider.CreateScope())
             {
                 var messageObject = JsonSerializer.Deserialize<JsonElement>(message);
-                    var accountId = messageObject.GetProperty("account_id").GetInt64();
-                    var amount = messageObject.GetProperty("amount").GetDecimal();
-                    var status = messageObject.GetProperty("status").GetString();
-                    var details = messageObject.GetProperty("details").GetString();
+                var transactionType = messageObject.GetProperty("TransactionType").GetString();
+                var accountId = messageObject.GetProperty("AccountId").GetInt64();
+                var amount = messageObject.GetProperty("Amount").GetDecimal();
+                var status = messageObject.GetProperty("Status").GetString();
+                var details = messageObject.GetProperty("Details").GetString();
 
-                    Console.WriteLine($"{amount} for account {accountId}");
-                    Console.WriteLine($"Status: {status}, Details: {details}");
+                Console.WriteLine($"{transactionType} of amount: {amount} for account {accountId}");
+                Console.WriteLine($"Status: {status}, Details: {details}");
             }
         }
     }
