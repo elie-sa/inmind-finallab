@@ -1,6 +1,6 @@
-namespace FinalLabInmind.DTO;
+namespace FinalLabInmind.DTOs;
 
-public class AccountBalanceSummary
+public class AccountBalanceSummaryDto
 {
     public long AccountId { get; set; }
     public string AccountName { get; set; }

@@ -176,3 +176,4 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.0\FinalLabInmind.Tests.pdb
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.0\FinalLabInmind.Tests.genruntimeconfig.cache
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.0\ref\FinalLabInmind.Tests.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\es\FinalLabInmind.resources.dll

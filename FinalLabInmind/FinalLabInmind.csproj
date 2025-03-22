@@ -27,4 +27,19 @@
       <ProjectReference Include="..\LoggingMicroservice\LoggingMicroservice.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\TransactionDetails.es.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TransactionDetails.es.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\TransactionDetails.es.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>TransactionDetails.es.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

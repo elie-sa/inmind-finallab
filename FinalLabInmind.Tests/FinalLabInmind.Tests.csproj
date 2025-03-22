@@ -23,11 +23,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="AccountManagementTests\" />
+      <ProjectReference Include="..\FinalLabInmind\FinalLabInmind.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FinalLabInmind\FinalLabInmind.csproj" />
+      <Folder Include="Localization\" />
     </ItemGroup>
 
 </Project>

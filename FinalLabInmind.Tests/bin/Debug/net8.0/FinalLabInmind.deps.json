@@ -31,6 +31,9 @@
           "en/FinalLabInmind.resources.dll": {
             "locale": "en"
           },
+          "es/FinalLabInmind.resources.dll": {
+            "locale": "es"
+          },
           "fr/FinalLabInmind.resources.dll": {
             "locale": "fr"
           }
