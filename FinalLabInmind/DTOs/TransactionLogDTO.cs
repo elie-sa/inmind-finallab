@@ -11,6 +11,8 @@ public class TransactionLogDto
     public string Status { get; set; }
     public DateTime Timestamp { get; set; }
 
+    public string Details { get; set; }
+    
     public TransactionLogDto() {}
     public TransactionLogDto(TransactionLog transactionLog)
     {
@@ -20,5 +22,6 @@ public class TransactionLogDto
         Amount = transactionLog.Amount;
         Status = transactionLog.Status;
         Timestamp = transactionLog.Timestamp;
+        Details = transactionLog.Details;
     }
 }

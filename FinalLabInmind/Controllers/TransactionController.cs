@@ -8,7 +8,7 @@ using LoggingMicroservice.Models;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
 
-[Route("api/transactions")]
+[Route("transaction-logs")]
 [ApiController]
 public class TransactionLogController : ControllerBase
 {

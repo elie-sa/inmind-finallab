@@ -1,7 +1,9 @@
 using FinalLabInmind.DbContext;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
+using FinalLabInmind.Services.ExceptionServices;
 using FinalLabInmind.Services.TransactionLogService;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqProducer>();
+
+builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
 builder.Services.AddScoped<ITransactionLogService, TransactionLogService>();
 
@@ -36,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler(_ => { });
 
 app.UseAuthorization();
 

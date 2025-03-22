@@ -25,7 +25,8 @@ public class TransactionLogService : ITransactionLogService
             TransactionType = transactionLogDto.TransactionType,
             Amount = transactionLogDto.Amount,
             Status = transactionLogDto.Status,
-            Timestamp = DateTime.UtcNow
+            Timestamp = DateTime.UtcNow,
+            Details = transactionLogDto.Details ?? string.Empty 
         };
 
         _context.TransactionLogs.Add(transactionLog);

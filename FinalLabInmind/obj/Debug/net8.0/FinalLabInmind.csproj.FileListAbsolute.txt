@@ -174,3 +174,4 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\tr\M
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind\obj\Debug\net8.0\FinalLabInmind.sourcelink.json
