@@ -1,14 +1,17 @@
+using FinalLabInmind.Interfaces;
 using LoggingMicroservice.Models;
 
 namespace FinalLabInmind.Services.TransactionService;
 
-public class TransactionService
+public class TransactionService : ITransactionService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMessagePublisher _messagePublisher;
 
-    public TransactionService(IUnitOfWork unitOfWork)
+    public TransactionService(IUnitOfWork unitOfWork, IMessagePublisher messagePublisher)
     {
         _unitOfWork = unitOfWork;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<string> TransferFundsAsync(long fromAccountId, long toAccountId, decimal amount)
@@ -23,7 +26,18 @@ public class TransactionService
             if (fromAccount == null || toAccount == null)
                 throw new Exception("One or both accounts not found.");
 
-            var transactionFrom = new TransactionLog
+            if (fromAccount.Balance < amount)
+                throw new Exception("Insufficient funds in the source account.");
+
+            // Adjust account balances
+            fromAccount.Balance -= amount;
+            toAccount.Balance += amount;
+
+            await _unitOfWork.Accounts.UpdateAsync(fromAccount);
+            await _unitOfWork.Accounts.UpdateAsync(toAccount);
+
+            // Log transactions
+            var withdrawalLog = new TransactionLog
             {
                 AccountId = fromAccountId,
                 TransactionType = "Withdrawal",
@@ -33,7 +47,7 @@ public class TransactionService
                 Details = $"Transferred {amount} to Account {toAccountId}"
             };
 
-            var transactionTo = new TransactionLog
+            var depositLog = new TransactionLog
             {
                 AccountId = toAccountId,
                 TransactionType = "Deposit",
@@ -43,14 +57,14 @@ public class TransactionService
                 Details = $"Received {amount} from Account {fromAccountId}"
             };
 
-            await _unitOfWork.Transactions.AddAsync(transactionFrom);
-            await _unitOfWork.Transactions.AddAsync(transactionTo);
+            await _unitOfWork.Transactions.AddAsync(withdrawalLog);
+            await _unitOfWork.Transactions.AddAsync(depositLog);
 
-            await _unitOfWork.Accounts.UpdateAsync(fromAccount);
-            await _unitOfWork.Accounts.UpdateAsync(toAccount);
             await _unitOfWork.SaveAsync();
-
             await _unitOfWork.CommitTransactionAsync();
+
+            await _messagePublisher.PublishTransactionAsync(withdrawalLog);
+            await _messagePublisher.PublishTransactionAsync(depositLog);
 
             return "Transfer successful.";
         }

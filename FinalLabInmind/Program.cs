@@ -1,15 +1,14 @@
-using System.Reflection;
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services;
+using FinalLabInmind.Services.AccountService;
 using FinalLabInmind.Services.ExceptionServices;
 using FinalLabInmind.Services.RabbitMq;
+using FinalLabInmind.Services.TransactionLogService;
 using FinalLabInmind.Services.TransactionService;
 using FinalLabInmind.Services.UnitOfWork;
-using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,11 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqProducer>();
-builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
-builder.Services.AddExceptionHandler<ExceptionHandler>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddScoped<TransactionService>();
+// my custom services
+builder.Services.AddScoped<ITransactionLogService, TransactionLogService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddSingleton<RequestLoggingMiddleware>();
 
@@ -30,22 +31,13 @@ builder.Services.AddControllers()
     .AddOData(options => options
         .Select().Filter().OrderBy().Expand().Count().SetMaxTop(100));
 
-
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-var supportedCultures = new[] { "en", "fr" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-localizationOptions.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider());
-
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
-
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,14 +52,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(_ => { });
-
 app.UseHttpsRedirection();
+
+app.UseExceptionHandler(_ => { });
 
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 

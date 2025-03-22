@@ -1,3 +1,4 @@
+using FinalLabInmind.Models;
 using LoggingMicroservice.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,10 @@ public class AppDbContext: Microsoft.EntityFrameworkCore.DbContext, IAppDbContex
     {
     }
 
+    public DbSet<TransactionEvent> TransactionEvents { get; set; }
+
+    public DbSet<AccountEvent> AccountEvents { get; set; }
+    
     public DbSet<TransactionLog> TransactionLogs { get; set; }
     public DbSet<Account> Accounts { get; set; }
 
