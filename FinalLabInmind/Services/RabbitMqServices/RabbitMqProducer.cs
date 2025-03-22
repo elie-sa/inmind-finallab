@@ -1,4 +1,5 @@
 using System.Text;
+using FinalLabInmind.DTOs;
 using FinalLabInmind.Interfaces;
 using LoggingMicroservice.Models;
 using Newtonsoft.Json;
@@ -35,7 +36,9 @@ public class RabbitMqProducer : IMessagePublisher
 
         await channel.QueueDeclareAsync(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
-        var message = JsonConvert.SerializeObject(transaction);
+        var transactionDto = new TransactionLogDto(transaction);
+
+        var message = JsonConvert.SerializeObject(transactionDto);
         var body = Encoding.UTF8.GetBytes(message);
 
 

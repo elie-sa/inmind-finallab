@@ -21,5 +21,6 @@ public class TransactionLogDto
         Amount = transactionLog.Amount;
         Status = transactionLog.Status;
         Timestamp = transactionLog.Timestamp;
+        Details = transactionLog.Details;
     }
 }

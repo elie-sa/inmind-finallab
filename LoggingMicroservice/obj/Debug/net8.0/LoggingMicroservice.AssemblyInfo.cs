@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LoggingMicroservice")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a88a078f283ad673e095711e735bdab788c2ecb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59a5516c0ff0a02ac619a590105f922291ead932")]
 [assembly: System.Reflection.AssemblyProductAttribute("LoggingMicroservice")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LoggingMicroservice")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
