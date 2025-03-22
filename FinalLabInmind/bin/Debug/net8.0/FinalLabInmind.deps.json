@@ -25,11 +25,17 @@
           "FinalLabInmind.dll": {}
         },
         "resources": {
+          "de/FinalLabInmind.resources.dll": {
+            "locale": "de"
+          },
           "en/FinalLabInmind.resources.dll": {
             "locale": "en"
           },
           "fr/FinalLabInmind.resources.dll": {
             "locale": "fr"
+          },
+          "es/FinalLabInmind.resources.dll": {
+            "locale": "es"
           }
         }
       },

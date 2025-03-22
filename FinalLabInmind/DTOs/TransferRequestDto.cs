@@ -1,6 +1,6 @@
-namespace FinalLabInmind.DTO;
+namespace FinalLabInmind.DTOs;
 
-public class TransferRequest
+public class TransferRequestDto
 {
     public long FromAccountId { get; set; }
     public long ToAccountId { get; set; }

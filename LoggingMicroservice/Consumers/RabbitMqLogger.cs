@@ -60,7 +60,7 @@ public class RabbitMqLogger : BackgroundService
 
             await _channel.BasicConsumeAsync(
                 queue: "logging_queue",
-                autoAck: false, 
+                autoAck: true, 
                 consumer: consumer
             );
 
