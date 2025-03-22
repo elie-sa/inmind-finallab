@@ -1,4 +1,5 @@
 using FinalLabInmind.DbContext;
+using FinalLabInmind.DTOs;
 using FinalLabInmind.Interfaces;
 using LoggingMicroservice.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,35 +17,35 @@ public class TransactionLogService : ITransactionLogService
         _messagePublisher = messagePublisher;
     }
 
-    public async Task<TransactionLog> LogTransactionAsync(TransactionLog transactionLog)
+    public async Task<TransactionLogDto> LogTransactionAsync(TransactionLogDto transactionLogDto)
     {
-        if (transactionLog == null)
-            throw new ArgumentNullException(nameof(transactionLog), "Transaction data is missing.");
+        var transactionLog = new TransactionLog
+        {
+            AccountId = transactionLogDto.AccountId,
+            TransactionType = transactionLogDto.TransactionType,
+            Amount = transactionLogDto.Amount,
+            Status = transactionLogDto.Status,
+            Timestamp = DateTime.UtcNow
+        };
 
-        transactionLog.Timestamp = DateTime.UtcNow;
         _context.TransactionLogs.Add(transactionLog);
         await _context.SaveChangesAsync();
         await _messagePublisher.PublishTransactionAsync(transactionLog);
-        
-        return transactionLog;
+
+        return new TransactionLogDto(transactionLog);
     }
 
-    public async Task<List<TransactionLog>> GetTransactionLogsForAccountAsync(long accountId)
+    public async Task<List<TransactionLogDto>> GetTransactionLogsForAccountAsync(long accountId)
     {
         var transactionLogs = await _context.TransactionLogs
             .Where(t => t.AccountId == accountId)
             .ToListAsync();
 
-        foreach (var log in transactionLogs)
-        {
-            await _messagePublisher.PublishTransactionAsync(log);
-        }
-
-        return transactionLogs;
+        return transactionLogs.Select(t => new TransactionLogDto(t)).ToList();
     }
 
-    public IQueryable<TransactionLog> GetTransactionLogs()
+    public IQueryable<TransactionLogDto> GetTransactionLogs()
     {
-        return _context.TransactionLogs;
+        return _context.TransactionLogs.Select(t => new TransactionLogDto(t));
     }
 }

@@ -1,5 +1,6 @@
 using FinalLabInmind;
 using FinalLabInmind.DbContext;
+using FinalLabInmind.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using FinalLabInmind.Interfaces;
 using FinalLabInmind.Services.TransactionLogService;
@@ -19,37 +20,17 @@ public class TransactionLogController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> LogTransaction([FromBody] TransactionLog transactionLog)
+    public async Task<IActionResult> LogTransaction([FromBody] TransactionLogDto transactionLogDto)
     {
-        var result = await _transactionLogService.LogTransactionAsync(transactionLog);
-        return Ok(new
-        {
-            result.Id,
-            result.AccountId,
-            result.TransactionType,
-            result.Amount,
-            result.Status,
-            result.Timestamp
-        });
+        var result = await _transactionLogService.LogTransactionAsync(transactionLogDto);
+        return Ok(result);
     }
 
     [HttpGet("{accountId}")]
     public async Task<IActionResult> GetTransactionLogsForAccount(long accountId)
     {
-        var transactionLogs = await _transactionLogService.GetTransactionLogsForAccountAsync(accountId);
-        if (!transactionLogs.Any())
-        {
-            return NotFound("No transaction logs found for this account.");
-        }
-
-        return Ok(transactionLogs.Select(t => new
-        {
-            t.Id,
-            t.TransactionType,
-            t.Amount,
-            t.Timestamp,
-            t.Status
-        }));
+        var result = await _transactionLogService.GetTransactionLogsForAccountAsync(accountId);
+        return result.Any() ? Ok(result) : NotFound("No transaction logs found for this account.");
     }
 
     [HttpGet]
@@ -59,3 +40,4 @@ public class TransactionLogController : ControllerBase
         return Ok(_transactionLogService.GetTransactionLogs());
     }
 }
+
