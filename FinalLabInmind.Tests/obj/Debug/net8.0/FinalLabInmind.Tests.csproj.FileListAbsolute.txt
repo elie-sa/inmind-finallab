@@ -177,3 +177,7 @@ C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.0\FinalLabInmind.Tests.genruntimeconfig.cache
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\obj\Debug\net8.0\ref\FinalLabInmind.Tests.dll
 C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\es\FinalLabInmind.resources.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\System.Text.Json.dll
+C:\Users\Esawm\RiderProjects\FinalLabInmind\FinalLabInmind.Tests\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll

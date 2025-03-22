@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace FinalLabInmind.Tests.Events;
+namespace FinalLabInmind.Tests.EventControllers;
 
 public class AccountEventsControllerTests
 {

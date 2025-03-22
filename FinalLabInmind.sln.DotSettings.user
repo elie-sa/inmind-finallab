@@ -6,6 +6,13 @@
     &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.Transactions.TransactionControllerTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.Events.AccountEventsControllerTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.Events.TransactionEventsControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.EventHandlers.TransactionEventHandlerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.EventHandlers.AccountEventHandlerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.EventRollbackTests.AccountRollbackTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.EventRollbackTests.TransactionRollbackTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.LoggingMicroserviceTests.LoggingControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.Localization.AccountLocalizationServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::05001986-4F4E-43F5-BCA9-E3911868EC70::net8.0::FinalLabInmind.Tests.Localization.TransactionLocalizationServiceTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=FinalLabInmind_002FResources_002FAccountDetails/@EntryIndexedValue">True</s:Boolean>
